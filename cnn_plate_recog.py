@@ -147,6 +147,8 @@ Y_test = np.hstack((zero_label[700:], one_label[700:], two_label[700:], three_la
 # print X_test.shape
 # print Y_train.shape
 # print Y_test.shape
+X_train = 1-X_train
+X_test = 1-X_test
 
 X_train = X_train.reshape(X_train.shape[0], 1, 28, 28)
 X_test = X_test.reshape(X_test.shape[0], 1, 28, 28)
@@ -174,32 +176,28 @@ model.add(Activation('softmax'))
 
 model.compile(loss='categorical_crossentropy', optimizer='adadelta')
 
-
-
-
-
-    
 def plotLearningCurve(figPath):
     fig=plt.figure(0, figsize=(10,8) )
     fig.clf()
     plt.ioff()
     plt.subplot(211)
+    plt.grid(True)
     plt.plot(trn_error, label='Training Set Error', linestyle="--", linewidth=2)
     plt.plot(tst_error, label='Validation Set Error', linewidth=2)
     plt.title('CE Error')
     plt.xlabel('Epoch')
     plt.ylabel('Error')
     plt.legend()
-        
+       
     plt.subplot(212)
+    plt.grid(True)
     plt.plot(trn_class_accu, label='Training Set Accuracy', linestyle="--", linewidth=2)
     plt.plot(tst_class_accu, label='Validation Set Accuracy', linewidth=2)
-#     plt.ylim([0,103])
     plt.ylabel('Percent')
     plt.xlabel('Epoch')
     plt.title('Classification Accuracy')
     plt.legend(loc=4)
-        
+       
     plt.tight_layout(pad=2.1)
     plt.savefig(figPath)
  
@@ -211,44 +209,55 @@ trn_class_accu=[]
 tst_class_accu=[]
 patience = 100
 figPath = "Figure_CNN/ErrorGraph"
+trnErrorPath='Figure_CNN/trn_error'
+tstErrorPath='Figure_CNN/tst_error'
+trnClassErrorPath='Figure_CNN/trn_ClassAccu'
+tstClassErrorPath='Figure_CNN/tst_ClassAccu'
  
-# while (tstErrorCount<patience):
-#     # train model for 1 epoch
-#     log = model.fit(X_train, Y_train, batch_size=128, nb_epoch=1, show_accuracy=True, verbose=2, validation_data=(X_test, Y_test))
-#     # monitor train loss
-#     trnError = log.history["loss"]
-#     trnAcc = log.history["acc"]
-#     # monitor val loss
-#     tstError = log.history["val_loss"]
-#     tstAcc = log.history["val_acc"] 
-#     # append the loss and accuracy
-#     trn_class_accu.append(trnAcc)
-#     tst_class_accu.append(tstAcc)
-#     trn_error.append(trnError)
-#     tst_error.append(tstError)
-#       
-#     if(oldtstError==0):
-#         oldtstError = tstError
-#       
-#     if(oldtstError<tstError):
-#         tstErrorCount = tstErrorCount+1
-#         print 'No Improvement, count=%d' % tstErrorCount
-#         print 'Trn Acc:', trnAcc 
-#         print 'Tst Acc:', tstAcc
-# #         print '    Old Validation Error:', oldtstError 
-# #         print 'Current Validation Error:', tstError
-#                                                                                                                                                   
-#     if(oldtstError>tstError):
-#         print 'Improvement made!'
-#         print 'Trn Acc:', trnAcc 
-#         print 'Tst Acc:', tstAcc
-# #         print '    Old Validation Error:', oldtstError 
-# #         print 'Current Validation Error:', tstError
-#         tstErrorCount=0
-#         oldtstError = tstError
-#         model.save_weights("cnn.gz", overwrite=True)
-#         plotLearningCurve(figPath)
-# print "Patience elapsed! Stopping."
+while (tstErrorCount<patience):
+    # train model for 1 epoch
+    log = model.fit(X_train, Y_train, batch_size=128, nb_epoch=1, show_accuracy=True, verbose=0, validation_data=(X_test, Y_test))
+    # monitor train loss
+    trnError = log.history["loss"]
+    trnAcc = log.history["acc"]
+    # monitor val loss
+    tstError = log.history["val_loss"]
+    tstAcc = log.history["val_acc"] 
+    # append the loss and accuracy
+    trn_class_accu.append(trnAcc)
+    tst_class_accu.append(tstAcc)
+    trn_error.append(trnError)
+    tst_error.append(tstError)
+    
+    np.savetxt(trnErrorPath, trn_error)
+    np.savetxt(tstErrorPath, tst_error)
+    np.savetxt(trnClassErrorPath, trn_class_accu)
+    np.savetxt(tstClassErrorPath, tst_class_accu)
+
+     
+    if(oldtstError==0):
+        oldtstError = tstError
+     
+    if(oldtstError<tstError):
+        tstErrorCount = tstErrorCount+1
+        print 'No Improvement, count=%d' % tstErrorCount
+        print 'Trn Acc:', trnAcc 
+        print 'Tst Acc:', tstAcc
+#         print '    Old Validation Error:', oldtstError 
+#         print 'Current Validation Error:', tstError
+                                                                                                                                                 
+    if(oldtstError>tstError):
+        print 'Improvement made!'
+        print 'Trn Acc:', trnAcc 
+        print 'Tst Acc:', tstAcc
+#         print '    Old Validation Error:', oldtstError 
+#         print 'Current Validation Error:', tstError
+        tstErrorCount=0
+        oldtstError = tstError
+        model.save_weights("cnn.gz", overwrite=True)
+        plotLearningCurve(figPath)
+        
+print "Patience elapsed! Stopping."
 
 # model.load_weights("cnn.gz")
 

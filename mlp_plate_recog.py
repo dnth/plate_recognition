@@ -146,6 +146,10 @@ Y_test = np.hstack((zero_label[700:], one_label[700:], two_label[700:], three_la
 # print Y_train.shape
 # print Y_test.shape
 
+# Invert the pixels
+X_train = 1-X_train
+X_test = 1-X_test
+
 # convert class vectors to binary class matrices
 Y_train = np_utils.to_categorical(Y_train, 34)
 Y_test = np_utils.to_categorical(Y_test, 34)
@@ -171,6 +175,7 @@ def plotLearningCurve(figPath):
     fig.clf()
     plt.ioff()
     plt.subplot(211)
+    plt.grid(True)
     plt.plot(trn_error, label='Training Set Error', linestyle="--", linewidth=2)
     plt.plot(tst_error, label='Validation Set Error', linewidth=2)
     plt.title('CE Error')
@@ -179,6 +184,7 @@ def plotLearningCurve(figPath):
     plt.legend()
        
     plt.subplot(212)
+    plt.grid(True)
     plt.plot(trn_class_accu, label='Training Set Accuracy', linestyle="--", linewidth=2)
     plt.plot(tst_class_accu, label='Validation Set Accuracy', linewidth=2)
     plt.ylabel('Percent')
@@ -195,7 +201,7 @@ trn_error=[]
 tst_error=[]
 trn_class_accu=[]
 tst_class_accu=[]
-patience = 100
+patience = 200
 figPath = "Figure_MLP/ErrorGraph"
 trnErrorPath='Figure_MLP/trn_error'
 tstErrorPath='Figure_MLP/tst_error'
@@ -204,7 +210,7 @@ tstClassErrorPath='Figure_MLP/tst_ClassAccu'
 
 while (tstErrorCount<patience):
     # train model for 1 epoch
-    log = model.fit(X_train, Y_train, batch_size=64, nb_epoch=1, show_accuracy=True, verbose=0, validation_data=(X_test, Y_test))
+    log = model.fit(X_train, Y_train, batch_size=128, nb_epoch=1, show_accuracy=True, verbose=0, validation_data=(X_test, Y_test))
     # monitor train loss
     trnError = log.history["loss"]
     trnAcc = log.history["acc"]
