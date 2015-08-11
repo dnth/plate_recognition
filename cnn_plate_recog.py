@@ -174,10 +174,7 @@ model.add(Activation('softmax'))
 
 model.compile(loss='categorical_crossentropy', optimizer='adadelta')
 
-# model.fit(X_train, Y_train, batch_size=128, nb_epoch=100, show_accuracy=True, verbose=1, validation_data=(X_test, Y_test))
-# score = model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
-# print('Test score:', score[0])
-# print('Test accuracy:', score[1])
+
 
 
 
@@ -253,10 +250,10 @@ figPath = "Figure_CNN/ErrorGraph"
 #         plotLearningCurve(figPath)
 # print "Patience elapsed! Stopping."
 
-model.load_weights("cnn.gz")
+# model.load_weights("cnn.gz")
 
 # print model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
-print X_test.shape
-print model.predict_classes(X_test[:1] )
+# print X_test.shape
+# print model.predict_classes(X_test[:10] )
 
 

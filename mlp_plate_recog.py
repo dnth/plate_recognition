@@ -173,7 +173,7 @@ def plotLearningCurve(figPath):
     plt.subplot(211)
     plt.plot(trn_error, label='Training Set Error', linestyle="--", linewidth=2)
     plt.plot(tst_error, label='Validation Set Error', linewidth=2)
-    plt.title('Mean Squared Error')
+    plt.title('CE Error')
     plt.xlabel('Epoch')
     plt.ylabel('Error')
     plt.legend()
@@ -181,7 +181,6 @@ def plotLearningCurve(figPath):
     plt.subplot(212)
     plt.plot(trn_class_accu, label='Training Set Accuracy', linestyle="--", linewidth=2)
     plt.plot(tst_class_accu, label='Validation Set Accuracy', linewidth=2)
-#     plt.ylim([0,103])
     plt.ylabel('Percent')
     plt.xlabel('Epoch')
     plt.title('Classification Accuracy')
@@ -197,7 +196,11 @@ tst_error=[]
 trn_class_accu=[]
 tst_class_accu=[]
 patience = 100
-figPath = "Figure/ErrorGraph"
+figPath = "Figure_MLP/ErrorGraph"
+trnErrorPath='Figure_MLP/trn_error'
+tstErrorPath='Figure_MLP/tst_error'
+trnClassErrorPath='Figure_MLP/trn_ClassAccu'
+tstClassErrorPath='Figure_MLP/tst_ClassAccu'
 
 while (tstErrorCount<patience):
     # train model for 1 epoch
@@ -213,6 +216,12 @@ while (tstErrorCount<patience):
     tst_class_accu.append(tstAcc)
     trn_error.append(trnError)
     tst_error.append(tstError)
+    
+    np.savetxt(trnErrorPath, trn_error)
+    np.savetxt(tstErrorPath, tst_error)
+    np.savetxt(trnClassErrorPath, trn_class_accu)
+    np.savetxt(tstClassErrorPath, tst_class_accu)
+
      
     if(oldtstError==0):
         oldtstError = tstError
@@ -235,5 +244,7 @@ while (tstErrorCount<patience):
         oldtstError = tstError
         model.save_weights("mlp.gz", overwrite=True)
         plotLearningCurve(figPath)
+        
+print "Patience elapsed! Stopping."
 
 
