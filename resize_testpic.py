@@ -26,30 +26,8 @@ def resize_and_gray(path):
             for file in files:
                 print file
                 img = cv2.imread(subdir + "/" + file)
-                img_resized = cv2.resize(img, (15,15))
+                img_resized = cv2.resize(img, (28,28))
                 img_gray = cv2.cvtColor(img_resized, cv2.COLOR_BGR2GRAY)
                 cv2.imwrite(subdir + "/" + file, img_gray)
 
-model = Sequential()
-model.add(Convolution2D(32, 1, 3, 3, border_mode='full'))
-model.add(Activation('relu'))
-model.add(Convolution2D(32, 32, 3, 3))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(poolsize=(2, 2)))
-model.add(Dropout(0.25))
-
-model.add(Flatten())
-model.add(Dense(32*196, 128))
-model.add(Activation('relu'))
-model.add(Dropout(0.5))
-
-model.add(Dense(128, 34))
-model.add(Activation('softmax'))
-
-model.compile(loss='categorical_crossentropy', optimizer='adadelta')
-model.load_weights("cnn.gz")
-
-img = cv2.imread('testimage/Selection_005.png')
-print type(img)
-
-model.predict_classes(img)
+resize_and_gray("testimage")
