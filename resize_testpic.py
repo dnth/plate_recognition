@@ -18,7 +18,7 @@ from keras.layers.convolutional import Convolution2D, MaxPooling2D
 
 
                 
-def resize_and_gray(path):
+def resize_and_gray(path, width, height):
     subdirs = [x[0] for x in os.walk(path)]                                                                            
     for subdir in subdirs:                                                                                            
         files = os.walk(subdir).next()[2]                                                                             
@@ -26,8 +26,8 @@ def resize_and_gray(path):
             for file in files:
                 print file
                 img = cv2.imread(subdir + "/" + file)
-                img_resized = cv2.resize(img, (28,28))
+                img_resized = cv2.resize(img, (width,height)) # width * height
                 img_gray = cv2.cvtColor(img_resized, cv2.COLOR_BGR2GRAY)
                 cv2.imwrite(subdir + "/" + file, img_gray)
 
-resize_and_gray("testimage")
+resize_and_gray("testimage", 28,15)
