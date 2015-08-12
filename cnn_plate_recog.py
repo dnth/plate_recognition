@@ -254,11 +254,12 @@ tstClassErrorPath='Figure_CNN/tst_ClassAccu'
 model.load_weights("cnn.gz")
 # print "loaded weights"
 im = cv2.imread('/testimage/Selection_005.png')
-# cv2.imshow("img",im)
-# cv2.waitKey(0)
-im = im.reshape((1,1,28,28))
-print im.shape
-print X_test[:1].shape
+cv2.imshow("img",im)
+cv2.waitKey(0)
+
+# im = im.reshape((1,1,28,28))
+# print im.shape
+# print X_test[:1].shape
 
 
 
