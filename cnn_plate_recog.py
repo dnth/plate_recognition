@@ -250,24 +250,20 @@ tstClassErrorPath='Figure_CNN/tst_ClassAccu'
 #         
 # print "Patience elapsed! Stopping."
 
-# print "loading"
+
 model.load_weights("cnn.gz")
-# print "loaded weights"
-im = cv2.imread('testimage/Selection_005.png')
-# cv2.imshow("img",im)
-# cv2.waitKey(0)
+im = mpimg.imread('testimage/Selection_007.png')
 
 print im.shape
 print type(im)
-# im = im.reshape((1,1,28,28))
-# print im.shape
-# print X_test[:1].shape
 
-
+im = im.reshape((1,1,28,28))
+print im.shape
+print X_test[:1].shape
 
 # print model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
 # print X_test.shape
 
-# print model.predict_classes(X_test[:10] )
-
+# print model.predict_classes(X_test[:1] )
+print model.predict_classes(im)
 
